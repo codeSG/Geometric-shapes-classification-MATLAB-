@@ -1,0 +1,31 @@
+
+
+sizzz=zeros(1,320);
+pC=[];
+for i = 1:60
+    %Reading image one by one 
+    %convert rgb image into grayscale
+    I1 = rgb2gray(imread(strcat('shapes/',strcat(int2str(i),'.png'))));
+    
+    %features extraction using SURF algorithms
+    points1 = detectSURFFeatures(I1);
+    [features1,valid_points1] = extractFeatures(I1,points1);
+
+    %Dimensionality reduction of extracted features using PCA 
+    [pca1,zscore]=pca(features1);
+
+    %Converting matrix into 1-dimension vector of size 320(5 Principal components)
+    %Padding the smaller sized vector with '0'
+    B = reshape(pca1,[],1);
+    B(320)=0;
+
+    %Transformed inputs for classification 
+    pC(:,i)=B(1:320);
+    sizzz(i)=size(pca1,2);
+
+end
+
+
+sizzz
+pC
+size(pC);
